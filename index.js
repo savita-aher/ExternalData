@@ -1,6 +1,7 @@
 import * as Carousel from "./Carousel.js";
 import axios from "axios";
 
+console.log("Script loaded");
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
 // The information section div element.
@@ -21,6 +22,33 @@ const API_KEY = "live_77EEtJbcbUw1p8IVukfYn8J4sk4HeOhMAVnfMQ5aN8Cev2XTvU8XFEs4cN
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+console.log("initialLoad running...");
+
+async function initialLoad() {
+  try {
+    const response = await fetch("https://api.thecatapi.com/v1/breeds", {
+      headers: {
+        "x-api-key": "YOUR_API_KEY"
+      }
+    });
+
+    const breeds = await response.json();
+
+    breedSelect.innerHTML = '<option value="">Select a breed</option>';
+
+    breeds.forEach(breed => {
+      const option = document.createElement("option");
+      option.value = breed.id;
+      option.textContent = breed.name;
+      breedSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error loading breeds:", error);
+    breedSelect.innerHTML = '<option value="">Failed to load breeds</option>';
+  }
+}
+
+initialLoad();
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
